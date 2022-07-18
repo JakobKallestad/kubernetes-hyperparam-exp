@@ -73,15 +73,15 @@ class TSVLogger():
         return '\n'.join(self.log)
    
 def main():
-    import os
-    os.environ["JOB_ID"] = "1"
+    #import os
+    #os.environ["JOB_ID"] = "1"
     job_id = int(os.environ['JOB_ID'])
     #DATA_DIR = '/datasets/cifar10-data'
     #DATA_DIR = '/datasets/Failure_Mode/cifar10'
-    #DATA_DIR = '/models/mate_models/bertmate/cifar10_results'
-    #SAVE_DIR = '/models/mate_models/bertmate/cifar10_results'
-    DATA_DIR = 'datasets'
-    SAVE_DIR = 'logs'
+    DATA_DIR = '/models/mate_models/bertmate/cifar10_results'
+    SAVE_DIR = '/models/mate_models/bertmate/cifar10_results'
+    #DATA_DIR = 'datasets'
+    #SAVE_DIR = 'logs'
 
     #print('Downloading datasets')
     train_set_raw = torchvision.datasets.CIFAR10(root=DATA_DIR, train=True, download=False)
