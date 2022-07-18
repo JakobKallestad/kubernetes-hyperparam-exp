@@ -73,11 +73,15 @@ class TSVLogger():
         return '\n'.join(self.log)
    
 def main():
+    import os
+    os.environ["JOB_ID"] = "1"
     job_id = int(os.environ['JOB_ID'])
     #DATA_DIR = '/datasets/cifar10-data'
     #DATA_DIR = '/datasets/Failure_Mode/cifar10'
-    DATA_DIR = '/models/mate_models/bertmate/cifar10_results'
-    SAVE_DIR = '/models/mate_models/bertmate/cifar10_results'
+    #DATA_DIR = '/models/mate_models/bertmate/cifar10_results'
+    #SAVE_DIR = '/models/mate_models/bertmate/cifar10_results'
+    DATA_DIR = 'datasets'
+    SAVE_DIR = 'logs'
 
     #print('Downloading datasets')
     train_set_raw = torchvision.datasets.CIFAR10(root=DATA_DIR, train=True, download=False)
@@ -98,12 +102,12 @@ def main():
     opt = nesterov(trainable_params(model), momentum=momentum, weight_decay=5e-4*batch_size)
         
     # print('Warming up cudnn on random inputs')
-    for size in [batch_size, len(test_set_raw) % batch_size]:
-        warmup_cudnn(model, size)
+    #for size in [batch_size, len(test_set_raw) % batch_size]:
+    #    warmup_cudnn(model, size)
     
     t = Timer()
-    train_set = list(zip(transpose(normalise(pad(train_set_raw.train_data, 4))), train_set_raw.train_labels))
-    test_set = list(zip(transpose(normalise(test_set_raw.test_data)), test_set_raw.test_labels))
+    train_set = list(zip(transpose(normalise(pad(train_set_raw.data, 4))), train_set_raw.labels))
+    test_set = list(zip(transpose(normalise(test_set_raw.data)), test_set_raw.labels))
 
     TSV = TSVLogger()
     
