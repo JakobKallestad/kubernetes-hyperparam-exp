@@ -34,9 +34,6 @@ spec:
          - name: secrets-store
            mountPath: /kvmnt/secrets
            readOnly: true
-         - name: data
-           mountPath: /datasets
-           readOnly: true
          - name: models
            mountPath: /models
       serviceAccountName: kai-mm-dev
@@ -54,11 +51,6 @@ spec:
           volumeAttributes:
             secretProviderClass: secret-provider
         name: secrets-store
-      - azureFile:
-          readOnly: true
-          secretName: secrets-kv
-          shareName: training-data
-        name: data
       - azureFile:
           secretName: secrets-kv
           shareName: nlpmodels

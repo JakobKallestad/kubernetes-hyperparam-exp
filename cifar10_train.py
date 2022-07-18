@@ -75,7 +75,8 @@ class TSVLogger():
 def main():
     job_id = int(os.environ['JOB_ID'])
     #DATA_DIR = '/datasets/cifar10-data'
-    DATA_DIR = '/datasets/Failure_Mode/cifar10'
+    #DATA_DIR = '/datasets/Failure_Mode/cifar10'
+    DATA_DIR = '/models/mate_models/bertmate/cifar10_results'
     SAVE_DIR = '/models/mate_models/bertmate/cifar10_results'
 
     #print('Downloading datasets')
