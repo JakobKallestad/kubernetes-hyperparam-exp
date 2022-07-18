@@ -2,6 +2,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: cifar10-single-job-3
+  namespace: kai-mm
+  labels:
+    argocd.argoproj.io/instance: kai-mm
 spec:
   parallelism: 1
   template:
@@ -9,6 +12,8 @@ spec:
       name: cifar10-single-job
       labels:
         app: cifar10-single-job
+        WBS: C.DPN.MM.42252
+        aadpodidbinding: aadidentity-selector
     spec:
       restartPolicy: Never
       containers:
@@ -20,24 +25,46 @@ spec:
            value: "3"
          command: ["bash"]
          args: ["-c","python cifar10_train.py"]
-         computeResourceRequests: ["nvidia-gpu"]
-         volumeMounts:
-         - name: cifar10-training
-           mountPath: /cifar10-training
-         - name: cifar10-dataset
-           mountPath: /datasets
-      volumes:
-      - name: cifar10-training
-        gitRepo:
-          repository: https://github.com/NVIDIA-developer-blog/kubernetes-hyperparam-exp.git
-          revision: master
-          directory: .
-      - name: cifar10-dataset
-        nfs:
-          server: 10.110.114.22
-          path: /home/sprasanna/Projects/training-datasets
-      computeResources:
-       - name: "nvidia-gpu"
          resources:
            limits:
              nvidia.com/gpu: 1
+         volumeMounts:
+         - name: cifar10-training
+           mountPath: /cifar10-training
+         - name: secrets-store
+           mountPath: /kvmnt/secrets
+           readOnly: true
+         - name: data
+           mountPath: /datasets
+           readOnly: true
+         - name: models
+           mountPath: /models
+      serviceAccountName: kai-mm-dev
+      #nodeSelector:
+      #  agentpool: gpuv1001
+      #tolerations:
+      #  - effect: NoSchedule
+      #    key: nvidia.com/gpu_v100_1
+      #    operator: Equal
+      #    value: present
+      volumes:
+      - csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: secret-provider
+        name: secrets-store
+      - azureFile:
+          readOnly: true
+          secretName: secrets-kv
+          shareName: training-data
+        name: data
+      - azureFile:
+          secretName: secrets-kv
+          shareName: nlpmodels
+        name: models
+      - name: cifar10-training
+        gitRepo:
+          repository: https://github.com/JakobKallestad/kubernetes-hyperparam-exp.git
+          revision: master
+          directory: .

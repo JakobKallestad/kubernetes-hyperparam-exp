@@ -76,6 +76,7 @@ def main():
     job_id = int(os.environ['JOB_ID'])
     #DATA_DIR = '/datasets/cifar10-data'
     DATA_DIR = '/datasets/Failure_Mode/cifar10'
+    SAVE_DIR = '/models/mate_models/bertmate/cifar10_results'
 
     #print('Downloading datasets')
     train_set_raw = torchvision.datasets.CIFAR10(root=DATA_DIR, train=True, download=False)
@@ -109,7 +110,7 @@ def main():
     summary = train(model, lr_schedule, opt, train_set_aug, test_set, 
           batch_size=batch_size, loggers=(TableLogger(), TSV), timer=t, test_time_in_total=False, drop_last=True)
         
-    with open('/datasets/results_job_id_'+str(job_id)+'.log', 'w') as csvfile:
+    with open(SAVE_DIR +'/results_job_id_'+str(job_id)+'.log', 'w') as csvfile:
         cw = csv.writer(csvfile, delimiter=',')
         for key, val in summary.items():
             cw.writerow([key, val])    
