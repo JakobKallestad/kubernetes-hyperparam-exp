@@ -106,8 +106,8 @@ def main():
     #    warmup_cudnn(model, size)
     
     t = Timer()
-    train_set = list(zip(transpose(normalise(pad(train_set_raw.data, 4))), train_set_raw.labels))
-    test_set = list(zip(transpose(normalise(test_set_raw.data)), test_set_raw.labels))
+    train_set = list(zip(transpose(normalise(pad(train_set_raw.data, 4))), train_set_raw.targets))
+    test_set = list(zip(transpose(normalise(test_set_raw.data)), test_set_raw.targets))
 
     TSV = TSVLogger()
     
